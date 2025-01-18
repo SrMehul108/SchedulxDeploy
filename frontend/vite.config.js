@@ -13,7 +13,7 @@ export default defineConfig({
   build: {
     target: "esnext", // Optimize for modern browsers
     minify: "terser", // Use Terser for advanced minification
-    cssCodeSplit: true, // Split CSS into separate files for better caching
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -21,6 +21,7 @@ export default defineConfig({
         },
       },
     },
+    outDir: "dist",
   },
   esbuild: {
     jsx: "automatic", // Use React 17+ JSX runtime
