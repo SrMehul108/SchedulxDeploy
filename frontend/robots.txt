@@ -1,0 +1,28 @@
+# Allow all crawlers full access to the site
+User-agent: *
+Disallow:
+
+# Block access to sensitive or irrelevant directories
+Disallow: /static/
+Disallow: /node_modules/
+Disallow: /api/
+Disallow: /admin/
+
+# Allow access to public directories containing assets
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Prevent access to specific sensitive files (if applicable)
+Disallow: /config/
+Disallow: /README.md
+Disallow: /LICENSE
+
+# Prevent indexing of search result pages (if your site has search functionality)
+Disallow: /search
+
+# Specify crawl delay to reduce server load (optional)
+Crawl-delay: 10
+
+# Point to the sitemap for better indexing
+Sitemap: https://yourdomain.com/sitemap.xml

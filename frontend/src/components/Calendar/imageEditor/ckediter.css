@@ -1,0 +1,159 @@
+.dark .ck.ck-editor .ck-editor__top .ck-sticky-panel .ck-toolbar {
+    background-color: antiquewhite;
+    border:#374151;
+}
+.dark .ck.ck-button:not(.ck-disabled):hover, a.ck.ck-button:not(.ck-disabled):hover {
+    color: black;
+}
+.dark .ck-rounded-corners .ck.ck-editor__main > .ck-editor__editable, .ck.ck-editor__main > .ck-editor__editable.ck-rounded-corners {
+    background-color: #2d2f31;
+    border:#374151;
+}
+.dark .ck .ck-editor__top .ck-reset_all{
+    border:#374151;
+}
+.dark .ck.ck-icon.ck-icon_inherit-color {
+    color: black;
+}
+.ck.ck-editor__editable .image.ck-widget_selected {
+    width: 500px;
+}
+
+
+
+.dark .ckbox:not(#n) .cropper-bg { 
+    background-color: #121212;
+}
+.dark .ckbox:not(#n) .ckbox-img-editor-actions {
+    border-bottom: 1px solid #ffffff;
+    background-color: #1b1b1b;
+    color: white;
+}
+.dark .ckbox:not(#n) .ckbox-btn__text {
+    color: white;
+}
+.dark .ckbox:not(#n) .ckbox-img-editor-crop-card {
+    color: #006cf8;
+}
+.dark .ckbox:not(#n) .ckbox-img-editor-menu-container {
+    background-color: #1b1b1b;
+    color: #ffffff;
+}
+.dark .ckbox:not(#n) .ckbox-img-editor-menu-sub-section__title {
+    color: white;
+}
+.dark .ckbox:not(#n) .ckbox-text-field-input__field[type=number] {
+    color: #0e0e0e;
+}
+.dark .ckbox:not(#n) .ckbox-form-input-label {
+     color: #006cf8;
+     background-color: white;
+     height: 15px;
+}
+.dark .ckbox:not(#n) .ckbox-btn--icon-only-large {
+    color: #006cf8;
+    background: rgb(255, 254, 254);
+}
+
+
+.ck.ck-editor__editable .image.ck-widget_selected {
+    width: 100%; /* Default width for smaller screens */
+    max-width: 500px; /* Limit the width to 500px */
+}
+
+@media (max-width: 320px) {
+    .ck.ck-editor__editable .image.ck-widget_selected {
+        width: 90%; /* For 320px screens, set width to 90% */
+    }
+}
+
+@media (min-width: 321px) and (max-width: 480px) {
+    .ck.ck-editor__editable .image.ck-widget_selected {
+        width: 95%; /* For small screens, 95% width */
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .ck.ck-editor__editable .image.ck-widget_selected {
+        width: 400px; /* Adjust for medium screens */
+    }
+}
+
+@media (min-width: 769px) {
+    .ck.ck-editor__editable .image.ck-widget_selected {
+        width: 500px; /* Full width for larger screens */
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Add scroll functionality to CKBox image editor */
+.ckbox:not(#n) .ckbox-img-editor {
+    overflow: hidden; /* Default behavior - no scroll */
+    width: 100%; /* Ensure it takes the full width of the container */
+  }
+  
+  /* Enable scrolling and adjust max height for screens below 576px */
+  @media (max-width: 576px) {
+    .ckbox:not(#n) .ckbox-img-editor {
+      overflow: auto; /* Enable scrolling if content overflows */
+      max-height: auto; /* Set a max height for the editor */
+    }
+  }
+  
+  .ckbox:not(#n) .ckbox-img-editor-toolbar {
+    width: auto;
+  }
+
+  .ckbox:not(#n) .ckbox-img-editor-toolbar {
+    z-index: 99;
+  }
+
+
+
+
+
+

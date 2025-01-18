@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  margin-top: 5rem; 
+}
+.slick-arrow {
+  display: none !important ; 
+}
+html.light {
+  --background-color: white;
+  --text-color: black;
+}
+html.dark {
+  --background-color: #121212;
+  --text-color: white;
+}
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}

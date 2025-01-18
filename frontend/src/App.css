@@ -1,0 +1,75 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background-color: #e5e7eb;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(156, 156, 156);
+  border-radius: 5px;
+}
+
+.custom-toast-container {
+  background-color: #ebeef1 !important; 
+  color: #3b3b3b !important; 
+  border-radius: 10px !important; 
+  padding: 16px !important;
+  border: 1px solid #989898 !important;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.toast-icon {
+  font-size: 20px;
+  color: #f39c12;
+}
+
+.toast-message {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.custom-toast-progress {
+  background-color: #323232 !important; 
+}
+.fc-timegrid-slot {
+  min-height: 50px; 
+}
+
+.fc-daygrid-event {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media print {
+    body {
+        margin: 0 !important;
+    }
+}
+.main-container {
+    font-family: 'Lato';
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+.ck-content {
+    font-family: 'Lato';
+    line-height: 1.6;
+    word-break: break-word;
+}
+.editor-container_classic-editor .editor-container__editor {
+    min-width: 795px;
+    max-width: 795px;
+}
+

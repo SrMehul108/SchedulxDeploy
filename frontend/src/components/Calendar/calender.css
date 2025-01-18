@@ -1,0 +1,247 @@
+.fc-h-event .fc-event-main {
+  width: 100%;
+}
+
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+  position: relative;
+  min-height: 2em;
+}
+
+.fc-h-event {
+  display: flex;
+  border: 1px solid white;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.custom-event h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.custom-event p {
+  font-size: 14px;
+}
+
+.custom-event small {
+  font-size: 12px;
+}
+
+.event-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+}
+.fc .fc-button-primary {
+  background-color: white;
+  color: black;
+  border: 1px solid #d1d5db;
+  /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); */
+  border-radius: 0.75rem;
+  transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out;
+}
+.fc .fc-today-button {
+  border: 1px solid #d1d5db !important;
+}
+
+.fc .fc-button-primary:hover {
+  background-color: #f0f0f0;
+  color: black;
+  border: none;
+}
+.fc .fc-button-primary:active {
+  box-shadow: none;
+  background-color: #da2020;
+}
+.fc .fc-button-primary:not(:disabled):active:focus,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+  box-shadow: none;
+  background-color: black !important;
+}
+.fc .fc-button-group {
+  all: unset;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+  padding: 10px;
+}
+
+.fc .fc-button-primary:disabled {
+  background-color: white;
+  color: black;
+}
+
+.fc-timegrid-event-harness-inset .fc-timegrid-event,
+.fc-timegrid-event.fc-event-mirror,
+.fc-timegrid-more-link {
+  border: transparent !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: transparent !important;
+}
+
+.user-img {
+  position: relative;
+  width: 55px;
+  height: 55px;
+}
+
+.user-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.child-img {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  padding: 2px;
+}
+
+.child-img img {
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  border-radius: 50%;
+}
+.user-profile h3 {
+  font-size: 25px;
+  font-weight: 600;
+}
+.user-profile svg {
+  width: 18px;
+}
+.head-btn span svg {
+  width: 20px;
+}
+
+.head-btn button:hover {
+  background-color: #f1f1f1;
+}
+
+.head-btn button:active {
+  background-color: #1a252f;
+  color: white;
+}
+
+.fc-day-past {
+  background-color: #f6f6f6 !important;
+}
+
+.event-box .user-img {
+  width: 35px;
+  height: 35px;
+}
+
+.event-box .child-img {
+  width: 18px;
+  height: 18px;
+}
+.event-box h3 {
+  font-size: 20px;
+}
+.event-box-img {
+  width: auto;
+  height: auto;
+}
+
+.foter-box svg {
+  width: 15px;
+}
+.dropdown svg {
+  width: 20px;
+}
+.calendebutton3 svg {
+  width: 20px;
+}
+
+.dark .fc-h-event {
+  background-color: #64748b;
+  border: 1px solid #1f2937;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.dark .fc .fc-button-primary {
+  background-color: #1f2937;
+  color: white;
+  border: 1px solid #1f2937;
+}
+
+.dark .fc .fc-button-primary {
+  background-color: #64748b;
+  color: white;
+}
+.dark .fc .fc-today-button {
+  border: 1px solid #1f2937 !important;
+}
+
+.dark .fc .fc-button-primary:not(:disabled):active:focus,
+.dark .fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+  box-shadow: none;
+  background-color: rgb(255, 255, 255) !important;
+  color: black;
+}
+
+.dark .fc .fc-daygrid-day.fc-day-today {
+  color: black;
+  background-color: #312c2c88 !important;
+}
+
+.dark .fc-scrollgrid-sync-inner {
+  background-color: #121212;
+  color: white;
+}
+.dark .fc-theme-standard td,
+.fc-theme-standard th {
+  border: 1px solid #282a2b;
+}
+.dark .fc-theme-standard th {
+  border: 1px solid #282a2b;
+}
+.dark .fc-theme-standard td,
+.fc-theme-standard th {
+  border: 1px solid #e9e9e9;
+}
+.dark .fc .fc-col-header-cell-cushion {
+  background-color: #121212;
+  color: white;
+  /* border: 1px solid #333537; */
+}
+.dark .fc-day-past {
+  background-color: #27272733 !important; 
+  color: white; 
+}
+.dark .fc .fc-scrollgrid {
+  border: 1px solid #333537;
+}
+.dark .fc-theme-standard td {
+  border: 1px solid #333537;
+  background-color: #121212;
+}
+.dark .fc-timegrid-axis {
+  background-color: #121212;
+}
+
+.dark .fc-scrollgrid-sync-inner {
+  background-color: #121212;
+}
+.dark .fc-daygrid-day-number {
+  color: white !important;
+}
+
+.dark .fc-theme-standard td{
+  border: 1px solid #282a2b;
+}
+
+.fc .fc-daygrid-day-frame{
+  overflow: hidden;
+}
+
+.fc .fc-daygrid-event-harness-abs{
+  width: 100%;
+}
