@@ -1,23 +1,26 @@
 import React from "react";
 import { Icons } from "../../../constants/icons";
 
-const Linkdin = ({ previewImage, postContent }) => {
+const Linkdin = ({ previewImage, postContent, data = {} }) => {
+  const userName = data?.user?.name || "John Doe"; 
+  const profileImage =
+    data?.user?.twitter?.profileImage || "https://cdn-icons-png.flaticon.com/512/149/149071.png";
   if (!previewImage && !postContent) {
     return null;
   }
-
+  console.log("data", data);
   return (
     <div className="bg-white shadow-[0_4px_12px_-5px_rgba(0,0,0,0.4)] p-5 w-full max-w-sm rounded-lg font-[sans-serif] overflow-hidden mx-auto mt-4 dark:bg-ScocilMCompnent dark:text-white">
       {/* Header Section */}
       <div className="flex justify-between items-center">
         <div className="flex items-center">
           <img
-            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            src={profileImage}
             className="w-10 h-10 rounded-full"
             alt="user"
           />
           <div>
-            <p className="mx-2 font-semibold">John Doe</p>
+            <p className="mx-2 font-semibold">{userName}</p>
             <div className="mx-2 flex text-xs text-slate-500">
               1h <span className="px-1">{Icons.earth}</span>
             </div>
@@ -62,28 +65,12 @@ const Linkdin = ({ previewImage, postContent }) => {
       </div>
 
       <div className="flex items-center px-2 py-2">
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-          className="w-7 h-7 rounded-full"
-          alt="user"
-        />
         <div className="flex justify-between w-full items-start">
-          {/* Left Section: User Info */}
           <div className="flex flex-col items-start w-full">
-            <div className="flex items-center">
-              <span className="mx-2 font-semibold">John Doe</span>
-              <span className="bg-black px-1 mx-2 py-0.5 text-[8px] text-white rounded">
-                Author
-              </span>
-            </div>
-            {/* Post Content Section with Overflow Handling */}
             <div className="mx-2 text-[10px] text-gray-600 break-words overflow-hidden">
-              <p className="truncate w-20 break-words">{postContent}</p>
+              <p className="truncate w-40 break-words text-lg">{postContent}</p>
             </div>
           </div>
-
-          {/* Right Section: Ellipsis Icon */}
-          <span className="text-black">{Icons.elips}</span>
         </div>
       </div>
     </div>

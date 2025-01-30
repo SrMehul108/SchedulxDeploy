@@ -29,19 +29,19 @@ const ChannelModal = ({ onClose }) => {
       setError(null);
 
       let authUrl;
-      console.log("platformName",platformName);
+      
       switch (platformName) {
         
         case "XTwitter":
-          authUrl = "https://schedulx-backend-gj3k.onrender.com/api/v1/twitter";
+          authUrl = "https://schedulx-backend-ybdo.onrender.com/api/v1/twitter";
           // authUrl = "http://localhost:5000/api/v1/twitter";
           break;
         case "Facebook":
-          authUrl = "https://schedulx-backend-gj3k.onrender.com/api/v1/facebook";
+          authUrl = "https://schedulx-backend-ybdo.onrender.com/api/v1/facebook";
           // authUrl = "http://localhost:5000/api/v1/facebook";
           break;
         case "LinkedIn":
-          authUrl = "https://schedulx-backend-gj3k.onrender.com/api/v1/linkedin";
+          authUrl = "https://schedulx-backend-ybdo.onrender.com/api/v1/linkedin";
           // authUrl = "http://localhost:5000/api/v1/linkedin";
           break;
         default:

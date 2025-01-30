@@ -3,7 +3,7 @@ import axios from "axios";
 const api = axios.create({
   // baseURL: "https://twitter-1-msth.onrender.com", 
   // baseURL: "http://localhost:5000", 
-  baseURL: "https://schedulx-backend-gj3k.onrender.com", 
+  baseURL: "https://schedulx-backend-ybdo.onrender.com", 
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

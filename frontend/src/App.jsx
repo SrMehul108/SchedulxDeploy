@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useRef } from "react";
 // Auth Pages
 const Registration = lazy(() => import("./pages/auth/registration/Registration"));
 const ForgotPassword = lazy(() => import("./components/auth/ForgotPassword"));
@@ -48,22 +48,27 @@ import { ToastContainer } from "react-toastify";
 import { useEffect, useState } from "react";
 import { Icons } from "../src/constants/icons";
 import Loading from "./components/loader/loader";
+import api from "./apis/api";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("token"));
   const [theme, setTheme] = useState("light");
-  const [isThemeLoaded, setIsThemeLoaded] = useState(false); 
+  const [isThemeLoaded, setIsThemeLoaded] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const facebookCalled = useRef(false);
+  const linkedinCalled = useRef(false);
+  const twitterCalled = useRef(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "light";
     setTheme(savedTheme);
-    setIsThemeLoaded(true); 
+    setIsThemeLoaded(true);
   }, []);
 
   useEffect(() => {
     if (isThemeLoaded) {
       document.documentElement.className = theme;
-      localStorage.setItem("theme", theme); 
+      localStorage.setItem("theme", theme);
     }
   }, [theme, isThemeLoaded]);
 
@@ -81,8 +86,128 @@ function App() {
       window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const twitter = queryParams.get("twitter");
+    const linkedin = queryParams.get("linkedin");
+    const accessToken = queryParams.get("accessToken");
+    const facebook = queryParams.get("facebook");
+    if (facebook && !facebookCalled.current) {
+      facebookCalled.current = true;
+      try {
+        const parsedUser = JSON.parse(decodeURIComponent(facebook));
+        setUserData(parsedUser);
+        api
+          .post(
+            "/api/v1/facebook/facebook-add",
+            {
+              socialMediaID: parsedUser.id,
+              accessToken: parsedUser.accessToken,
+              platformUserName: parsedUser.displayName,
+              displayName: parsedUser.displayName,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+
+            const newUrl = `${window.location.origin}/publish`;
+            window.history.replaceState(null, "", newUrl);
+          })
+          .catch((error) => {
+            console.error("Error saving user data:", error);
+            setError(
+              error.response?.data?.ErrorMessage || "Failed to save user data"
+            );
+          });
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        setError("Failed to parse user data");
+      }
+    } else {
+      console.warn("No user parameter found in the URL.");
+    }
+    if (linkedin && !linkedinCalled.current) {
+      linkedinCalled.current = true;
+
+      try {
+        const parsedUser = JSON.parse(decodeURIComponent(linkedin));
+        setUserData(parsedUser);
+        api
+          .post(
+            "/api/v1/linkedin/linkedin-add",
+            {
+              sub: parsedUser.sub,
+              accessToken: accessToken,
+              socialMediaEmail: parsedUser.email,
+              platformUserName: parsedUser.name,
+              name: parsedUser.name,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+
+            const newUrl = `${window.location.origin}/publish`;
+            window.history.replaceState(null, "", newUrl);
+          })
+          .catch((error) => {
+            console.error("Error saving user data:", error);
+            setError(
+              error.response?.data?.ErrorMessage || "Failed to save user data"
+            );
+          });
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        setError("Failed to parse user data");
+      }
+    } else {
+      console.warn("No user parameter found in the URL.");
+    }
+    if (twitter && !twitterCalled.current) {
+      twitterCalled.current = true; // Mark Twitter API as calledif (twitter) {
+      try {
+        const parsedUser = JSON.parse(decodeURIComponent(twitter));
+        setUserData(parsedUser);
+        api
+          .post(
+            "/api/v1/twitter/twitter-add",
+            {
+              accessToken: parsedUser.accessToken,
+              accessSecret: parsedUser.accessSecret,
+              displayName: parsedUser.displayName,
+              socialMediaID: parsedUser.id,
+              platformUserName: parsedUser.username,
+            },
+            {
+              withCredentials: true,
+            }
+          )
+          .then((response) => {
+
+            const newUrl = `${window.location.origin}/publish`;
+            window.history.replaceState(null, "", newUrl);
+          })
+          .catch((error) => {
+            console.error("Error saving user data:", error);
+            setError(
+              error.response?.data?.ErrorMessage || "Failed to save user data"
+            );
+          });
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        setError("Failed to parse user data");
+      }
+    } else {
+      console.warn("No user parameter found in the URL.");
+    }
+  }, [location.search]);
+
   if (!isThemeLoaded) {
-    return null; 
+    return null;
   }
 
   return (
@@ -244,7 +369,7 @@ function App() {
           >
             <Route
               path="general"
-              element={<ProtectedRoute element={<General />} />}
+              element={<ProtectedRoute element={<Notification />} />}
             />
             <Route
               path="security"
@@ -256,7 +381,7 @@ function App() {
             />
             <Route
               path="appsextras"
-              element={<ProtectedRoute element={<AppsExtra />} />}
+              element={<ProtectedRoute element={<Security />} />}
             />
           </Route>
         </Routes>

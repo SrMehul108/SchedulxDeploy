@@ -3,27 +3,27 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 export default defineConfig({
-  plugins: [react()],
   base: "/",
+  plugins: [react()],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
   build: {
-    target: "esnext", // Optimize for modern browsers
-    minify: "terser", // Use Terser for advanced minification
+    outDir: "dist",
+    target: "esnext",
+    minify: "terser", // Ensure terser is explicitly used
     cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["react", "react-dom"], // Separate vendor libraries
+          vendor: ["react", "react-dom"],
         },
       },
     },
-    outDir: "dist",
   },
   esbuild: {
-    jsx: "automatic", // Use React 17+ JSX runtime
+    jsx: "automatic",
   },
 });

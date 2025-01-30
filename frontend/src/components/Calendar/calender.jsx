@@ -3,10 +3,10 @@ import "@fullcalendar/react/dist/vdom";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction"; 
+import interactionPlugin from "@fullcalendar/interaction";
 import moment from "moment-timezone";
-import "./calender.css"; 
-import { Icons } from "../../constants/icons"; 
+import "./calender.css";
+import { Icons } from "../../constants/icons";
 import DropdownButton from "./multibutton";
 import CalenderModel from "./calendermodel";
 import api from "../../apis/api";
@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 
 const CustomEvent = ({ event, onOpenModal }) => {
   const { title, extendedProps } = event;
-  const platformName = extendedProps.platformName.toLowerCase(); 
+  const platformName = extendedProps.platformName.toLowerCase();
   const postId = extendedProps?.platformSpecific?.postId;
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -26,7 +26,7 @@ const CustomEvent = ({ event, onOpenModal }) => {
     xtwitter: `https://twitter.com/user/status/${postId}`,
   };
 
-  const redirectUrl = platformUrls[platformName] || "#"; 
+  const redirectUrl = platformUrls[platformName] || "#";
 
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -40,18 +40,17 @@ const CustomEvent = ({ event, onOpenModal }) => {
 
   return (
     <div
-      className={`p-2 flex gap-2 items-center rounded-md  shadow-sm hover:bg-gray-100 transition-all w-[100%] ${
-        extendedProps.post.status === "posted"
+      className={`p-2 flex gap-2 items-center rounded-md  shadow-sm hover:bg-gray-100 transition-all w-[100%] ${extendedProps.post.status === "posted"
           ? "bg-gray-200 dark:bg-bgbutton dark:text-black"
           : "bg-white dark:bg-[#475569] dark:border-borderDarkmode"
-      }`}
+        }`}
       onClick={() => onOpenModal(event.id)}
     >
       {/* Event Image */}
       <div className="flex items-center justify-center rounded-full overflow-hidden w-9 h-9">
         <Link to={redirectUrl} target="_blank" rel="noopener noreferrer">
           {extendedProps.status === "draft" ||
-          extendedProps.status === "scheduled" ? (
+            extendedProps.status === "scheduled" ? (
             <img
               src={`${backendUrl}/${extendedProps.imageUrl}`}
               alt={title}
@@ -84,6 +83,7 @@ function Calendar({ userData }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editPostData, setEditPostData] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 1025);
+  const [isPosting, setIsPosting] = useState(false); // State to manage loader visibility
 
   const handleEdit = (event) => {
     setEditPostData(event);
@@ -107,6 +107,7 @@ function Calendar({ userData }) {
   };
 
   const fetchEvents = async () => {
+    setIsPosting(true);
     try {
       const response = await api.get("/api/v1/post/posts-get");
       const apiData = response.data.data;
@@ -118,15 +119,15 @@ function Calendar({ userData }) {
             id: post._id,
             title:
               platformSpecific.text || platformSpecific.content || "No Title",
-            date: new Date(post.scheduledTime).toISOString(), 
+            date: new Date(post.scheduledTime).toISOString(),
             status: post.status,
             extendedProps: {
               imageUrl:
                 platformSpecific.mediaUrls?.[0] ||
-                "https://via.placeholder.com/150", 
-              platformSpecific, 
-              post, 
-              platformName: platform.platformName, 
+                "https://via.placeholder.com/150",
+              platformSpecific,
+              post,
+              platformName: platform.platformName,
             },
           };
         })
@@ -141,10 +142,12 @@ function Calendar({ userData }) {
       setEvents(filteredPosts);
     } catch (error) {
       console.error("Error fetching events:", error);
+    } finally {
+      setIsPosting(false);
     }
   };
 
-  console.log(events);
+
 
   useEffect(() => {
     fetchEvents();
@@ -177,7 +180,7 @@ function Calendar({ userData }) {
     const newDate = moment(info.event.startStr).toISOString();
     const eventId = info.event.id;
 
-    console.log("INFO", info);
+
     const updatedEvent = events.find((event) => event.id === eventId);
     const socialMediaId =
       updatedEvent?.extendedProps?.platformSpecific?.socialMediaId;
@@ -225,7 +228,7 @@ function Calendar({ userData }) {
   return (
     <>
       <div className="cal">
-          {/* <Loading/> */}
+        {/* <Loading/> */}
         <div className="calende-hader flex flex-wrap justify-between py-3">
           {/* Custom Header */}
           <div className="user-profile flex justify-center px-2">
@@ -252,61 +255,64 @@ function Calendar({ userData }) {
                 items={tagItems1}
                 selectedLabel={selectedFilter}
                 onSelect={(filter) => {
-                  setSelectedFilter(filter); 
-                  fetchEvents(); 
+                  setSelectedFilter(filter);
+                  fetchEvents();
                 }}
               />
             )}
           </div>
         </div>
 
+        
 
-        <FullCalendar
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-          initialView={isMobile ? "timeGridDay" : "dayGridMonth"}
-          headerToolbar={{
-            start: isMobile ? "prev,next" : "prev,today,next",
-            center: isMobile ? "" : "title",
-            end: isMobile
-              ? "timeGridDay,timeGridWeek"
-              : "dayGridMonth,timeGridWeek,timeGridDay",
-          }}
-          height="auto"
-          events={events}
-          editable={true}
-          droppable={true}
-          eventOverlap={true}
-          timeZone="Asia/Kolkata"
-          slotEventOverlap={false}
-          eventDrop={(info) => {
-            const isPastEvent = moment(info.event.start).isBefore(
-              moment(),
-              "day"
-            );
-            const isPosted = info.event.extendedProps.status === "posted";
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            initialView={isMobile ? "timeGridDay" : "dayGridMonth"}
+            headerToolbar={{
+              start: isMobile ? "prev,next" : "prev,today,next",
+              center: isMobile ? "" : "title",
+              end: isMobile
+                ? "timeGridDay,timeGridWeek"
+                : "dayGridMonth,timeGridWeek,timeGridDay",
+            }}
+            height="auto"
+            // events={events}
+            events={events} 
+            editable={true}
+            droppable={true}
+            eventOverlap={true}
+            timeZone="Asia/Kolkata"
+            slotEventOverlap={false}
+            eventDrop={(info) => {
+              const isPastEvent = moment(info.event.start).isBefore(
+                moment(),
+                "day"
+              );
+              const isPosted = info.event.extendedProps.status === "posted";
 
-            if (isPastEvent || isPosted) {
-              info.revert();
-            } else {
-              handleEventDrop(info);
-            }
-          }}
-          eventClick={(info) => openModal(info.event.id)}
-          eventContent={(info) => (
-            <CustomEvent event={info.event} onOpenModal={openModal} />
-          )}
-          dayMaxEventRows={true}
-          eventClassNames={(info) => {
-            if (moment(info.event.start).isBefore(moment(), "day")) {
-              return "past-event";
-            }
-            if (info.event.extendedProps.status === "posted") {
-              return "posted-event";
-            }
-            return "future-event";
-          }}
-          classNames={`fc-dark:bg-darkBg fc-dark:text-darkText`}
-        />
+              if (isPastEvent || isPosted) {
+                info.revert();
+              } else {
+                handleEventDrop(info);
+              }
+            }}
+            eventClick={(info) => openModal(info.event.id)}
+            eventContent={(info) => (
+              <CustomEvent event={info.event} onOpenModal={openModal} />
+            )}
+            dayMaxEventRows={true}
+            eventClassNames={(info) => {
+              if (moment(info.event.start).isBefore(moment(), "day")) {
+                return "past-event";
+              }
+              if (info.event.extendedProps.status === "posted") {
+                return "posted-event";
+              }
+              return "future-event";
+            }}
+            classNames={`fc-dark:bg-darkBg fc-dark:text-darkText`}
+          />
+ 
       </div>
       {selectedEventId && (
         <CalenderModel
@@ -320,7 +326,7 @@ function Calendar({ userData }) {
       {isEditModalOpen && (
         <EditPost
           closePopup={() => setIsEditModalOpen(false)}
-          editData={editPostData} 
+          editData={editPostData}
           userData={userData}
           onAdd={fetchData}
         />

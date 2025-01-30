@@ -84,6 +84,7 @@ const AnalyzeDashboard = () => {
             title="Recent Post Performance"
             description="See how your latest posts are performing across platforms."
             posts={data}
+            platformIcons={platformIcons} 
           />
           <SocialChannels
             title="Channel Overview"
@@ -148,7 +149,8 @@ const AnalyzeDashboard = () => {
             title="Post Performance"
             description="View performance of your posts."
             posts={twitterPosts}
-            icon={platformIcons.xtwitter}
+            // icon={platformIcons.xtwitter}
+            platformIcons={platformIcons} 
           />
           <SocialChannels
             title="Channel Overview"
@@ -205,7 +207,8 @@ const AnalyzeDashboard = () => {
             title="Post Performance"
             description="View performance of your posts."
             posts={linkedinPosts}
-            icon={platformIcons.linkedin}
+            // icon={platformIcons.linkedin}
+            platformIcons={platformIcons} 
           />
           <SocialChannels
             title="Channel Overview"

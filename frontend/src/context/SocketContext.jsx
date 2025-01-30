@@ -8,10 +8,9 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     // const backendUrl = import.meta.env.VITE_BACKEND_URL || "https://twitter-1-msth.onrender.com";
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || "https://schedulx-backend-gj3k.onrender.com";
+    const backendUrl = import.meta.env.VITE_BACKEND_URL || "https://schedulx-backend-ybdo.onrender.com";
 
     const newSocket = io(backendUrl, { withCredentials: true });
-    console.log("Initializing Socket:", newSocket); // Log the new socket instance
 
     setSocket(newSocket);
 
@@ -19,20 +18,35 @@ export const SocketProvider = ({ children }) => {
     return () => {
       if (newSocket) {
         newSocket.disconnect();
-        console.log("Socket Disconnected");
       }
     };
   }, []);
 
   useEffect(() => {
     if (socket) {
-      console.log("Socket Connected:", socket);
+      const userId = localStorage.getItem("userId"); // Get logged-in user ID from localStorage
+
+      if (userId) {
+        socket.emit("join", userId); // User joins their private room
+      }
+
+      socket.on("notification", (data) => {
+        if (data.receiverId === userId) {
+          // Show notification only if receiverId matches the logged-in userId
+          console.log("New Notification:", data.message);
+        }
+      });
+
+      return () => {
+        socket.off("notification");
+      };
     }
   }, [socket]); // Log when socket state updates
-  
-  return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
-};
 
+  return (
+    <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
+  );
+};
 
 export const useSocket = () => {
   const socket = useContext(SocketContext);

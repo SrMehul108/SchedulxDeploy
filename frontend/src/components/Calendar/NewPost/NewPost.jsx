@@ -79,7 +79,7 @@ const InputCalendar = ({ props, value, onChange, placeholder }) => {
       value={value}
       onChange={onChange}
       min={currentDateTime}
-      className="w-full px-3 py-2 border mt-5 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-bgCopnents dark:text-white"
+      className="w-full px-3 py-2 border mt-3 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-bgCopnents dark:text-white"
       placeholder="Schedule Date & Time"
       {...props}
     />
@@ -143,7 +143,7 @@ const channelIcons = {
   ),
 };
 
-function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
+function NewPost({ closePopup, initialChannels = [], userData, preview }) {
   const [selectedChannels, setSelectedChannels] = useState(initialChannels);
   const [scheduledTime, setScheduledTime] = useState(""); // Add this line
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -157,8 +157,10 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
-  const [editedContent, setEditedContent] = useState(""); 
-  const [mediaUrls, setMediaUrls] = useState([]); 
+  const [editedContent, setEditedContent] = useState("");
+  const [mediaUrls, setMediaUrls] = useState([]);
+  const [error, setError] = useState()
+  const [isPosting, setIsPosting] = useState(false); // State to manage loader visibility
 
   const channels = [
     "Instagram",
@@ -180,7 +182,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
 
       const response = await api.get(`/api/v1/user/user-get/${userId}`);
       setData(response.data.data);
-      console.log("User Data:", response.data.data);
+
     } catch (err) {
       console.error("Error fetching user data:", err);
       setError(err.response?.data?.message || "Failed to fetch user data");
@@ -202,28 +204,20 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
     );
   };
 
-  console.log("N", data);
-
   useEffect(() => {
-    console.log("Received userData in NewPost:", userData);
+
   }, [userData]);
 
-  console.log("User ID:", userData?.user?._id);
-  console.log("User Data at newpost", userData);
-  console.log("User Name:", userData?.user?.name);
-
-
-  console.log("new post :", userData);
   const handleChannelClick = (channel) => {
     if (!ConnectChannels(channel)) {
       alert(`${channel} is not connected. Please connect it first.`);
-      return; 
+      return;
     }
 
     setSelectedChannels(
       (prevSelected) =>
         prevSelected.includes(channel)
-          ? prevSelected.filter((c) => c !== channel) 
+          ? prevSelected.filter((c) => c !== channel)
           : [...prevSelected, channel]
     );
   };
@@ -234,27 +228,27 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
     );
 
     if (selectedChannels.length === connectedChannels.length) {
-      setSelectedChannels([]); 
+      setSelectedChannels([]);
     } else {
-      setSelectedChannels(connectedChannels); 
+      setSelectedChannels(connectedChannels);
     }
   };
 
   // Handle AI Assistant Toggle
-  const handleAIClick = () => {
-    setIsAiPromptActive((prev) => !prev);
+  // const handleAIClick = () => {
+  //   setIsAiPromptActive((prev) => !prev);
 
-    if (!isAiPromptActive) {
-      setAiPrompt(""); 
-      setPostContent(""); 
-    } else if (aiPrompt.trim() !== "") {
-      fetchAIContent(aiPrompt); 
-    }
-  };
+  //   if (!isAiPromptActive) {
+  //     setAiPrompt("");
+  //     setPostContent("");
+  //   } else if (aiPrompt.trim() !== "") {
+  //     fetchAIContent(aiPrompt);
+  //   }
+  // };
 
-  const handleAiPromptChange = (e) => {
-    setAiPrompt(e.target.value);
-  };
+  // const handleAiPromptChange = (e) => {
+  //   setAiPrompt(e.target.value);
+  // };
 
   const handleTextareaChange = (e) => {
     setPostContent(e.target.value);
@@ -296,7 +290,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
       });
 
       if (response.status === 200) {
-        console.log("Server response:", response.data);
+
         localStorage.removeItem("mediaUrls");
         return response.data;
       } else {
@@ -318,19 +312,28 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
       const response = await api.post("/api/v1/openai/generate-response", {
         input: prompt,
       });
-      setPostContent(response.data.responseData || ""); 
+      setPostContent(response.data.responseData || "");
     } catch (error) {
       console.error("Error calling AI API:", error);
       alert("Failed to generate content. Please try again.");
     } finally {
-      setIsLoadingAI(false); 
+      setIsLoadingAI(false);
     }
+  };
+
+  const handleAiButtonClick = () => {
+    if (!postContent.trim()) {
+      alert("Please enter some text or a prompt to generate AI content.");
+      return;
+    }
+    fetchAIContent(postContent);
   };
 
   const handleSubmit = async (status) => {
     try {
+      setIsPosting(true);
       const uploadedMediaUrl = await uploadImages();
-      console.log("uploadedMediaUrl", uploadedMediaUrl.imagePath);
+
       if (!uploadedMediaUrl && uploadedFiles.length > 0) {
         alert("Image upload failed.");
         return;
@@ -342,7 +345,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
           platformName: "XTwitter",
           postData: async (socialMediaID) => ({
             socialMediaId: socialMediaID,
-            text: postContent || "Default Content", 
+            text: postContent || "Default Content",
             mediaUrls: [uploadedMediaUrl.imagePath],
           }),
         },
@@ -393,13 +396,13 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
       const postData = {
         userId: userData?.user?._id,
         platformSpecific: platformData,
-        postContent: editedContent || postContent, 
-        mediaUrls: mediaUrls, 
+        postContent: editedContent || postContent,
+        mediaUrls: mediaUrls,
         scheduledTime: scheduledTime || defaultScheduledTime,
         status,
       };
 
-      console.log("Payload being sent:", postData);
+
 
       const response = await api.post("/api/v1/post/post-add", postData);
       closePopup();
@@ -412,6 +415,8 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
       } else {
         alert("An error occurred. Please try again.");
       }
+    } finally {
+      setIsPosting(false); // Hide loader
     }
   };
 
@@ -429,7 +434,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
       >
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-xl shadow-lg flex flex-col md:flex-row dark:bg-bgCopnents dark:text-white">
-            <div className="flex-1 p-6 transition-all duration-300">
+            <div className="flex-1 p-6 transition-all duration-300 max-h-[820px] overflow-y-auto">
               <div className="max-w-3xl mx-auto">
                 <span
                   onClick={closePopup}
@@ -448,7 +453,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                     onClick={handleSelectAll}
                   >
                     {selectedChannels.length ===
-                    channels.filter(ConnectChannels).length
+                      channels.filter(ConnectChannels).length
                       ? "Deselect All Channels"
                       : "Pick All Connected Channels"}
                   </Button>
@@ -529,11 +534,10 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                                 />
                                 <Label htmlFor={type}>
                                   <span
-                                    className={`px-3 py-2 rounded-xl transition-colors ${
-                                      postType === type
-                                        ? "bg-blue-100 text-blue-700"
-                                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                                    }`}
+                                    className={`px-3 py-2 rounded-xl transition-colors ${postType === type
+                                      ? "bg-blue-100 text-blue-700"
+                                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                      }`}
                                   >
                                     {type.charAt(0).toUpperCase() +
                                       type.slice(1)}
@@ -549,11 +553,10 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                       <div
                         {...getRootProps()}
                         onClick={() => setIsEditorOpen(true)}
-                        className={`border-2 border-dashed rounded-xl p-4 text-center transition-colors ${
-                          isDragActive
-                            ? "border-blue-500 bg-blue-50"
-                            : "border-gray-300"
-                        }`}
+                        className={`border-2 border-dashed rounded-xl p-4 text-center transition-colors ${isDragActive
+                          ? "border-blue-500 bg-blue-50"
+                          : "border-gray-300"
+                          }`}
                       >
                         {previewImages.length > 0 || mediaUrls.length > 0 ? (
                           <div className="grid grid-cols-2 gap-4">
@@ -588,7 +591,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                                   alt={`Preview Image ${index + 1}`}
                                   className="w-full h-40 object-cover rounded-xl"
                                 />
-                                
+
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
@@ -627,18 +630,18 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                           variant="outline"
                           size="icon"
                           onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                         className="px-2 py-2 border rounded-xl hover:bg-slate-50 flex items-center justify-center    dark:bg-bgbutton  dark:border-borderDarkmode"
+                          className="px-2 py-2 border rounded-xl hover:bg-slate-50 flex items-center justify-center    dark:bg-bgbutton  dark:border-borderDarkmode"
                         >
                           <SmileIcon className="h-4 w-4" />
                         </Button>
-                        <Button
+                        {/* <Button
                           variant="outline"
                           size="icon"
                           onClick={handleAIClick}
                           disabled={isLoadingAI} // Disable button while 
                           className="px-2 py-2 border rounded-xl hover:bg-slate-50 flex items-center justify-center space-x-1   dark:bg-bgbutton  dark:border-borderDarkmode"
                         >
-                          <div className="flex gap-2">
+                          <div className="flex items-center gap-2">
                             {isLoadingAI ? (
                               <>
                                 <span className="h-4 w-4">{Icons.magic}</span>
@@ -651,7 +654,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                               </>
                             )}
                           </div>
-                        </Button>
+                        </Button> */}
                       </div>
 
                       {showEmojiPicker && (
@@ -663,7 +666,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                       )}
 
                       {/* Textarea for AI Prompt */}
-                      {isAiPromptActive && (
+                      {/* {isAiPromptActive && (
                         <div className="space-y-4">
                           <div className="p-[2px] rounded-lg bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 ">
                             <Textarea
@@ -689,12 +692,40 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                         <Textarea
                           value={postContent}
                           onChange={(e) => {
-                            console.log("Textarea Input:", e.target.value);
+                            
                             setPostContent(e.target.value);
                           }}
                           placeholder="Start writing or use the AI Assistant"
                           className="min-h-[100px] rounded-lg w-full p-2 focus:outline-none dark:bg-bgCopnents"
                         />
+                      </div> */}
+                      <div className="space-y-4">
+                        <div className="relative">
+                          <Textarea
+                            value={postContent}
+                            onChange={handleTextareaChange}
+                            rows={3}
+                            placeholder="Type your content or AI prompt here..."
+                            className="placeholder:text-sm w-full px-3 py-2 border border-gray-300 dark:bg-bgCopnents rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <Button
+                            onClick={handleAiButtonClick}
+                            disabled={isLoadingAI}
+                            className="absolute right-[-5px] top-[-50px] text-xs bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-pink-500 hover:to-indigo-500 text-white px-3 py-2 rounded-xl flex items-center gap-2 transition-all duration-300"
+                          >
+                            {isLoadingAI ? (
+                              <>
+                                <span className="loader animate-spin"></span>
+                                Generating...
+                              </>
+                            ) : (
+                              <>
+                                {Icons.magic}
+                                AI Assistant
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </div>
                     </div>
 
@@ -706,7 +737,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                             <Input placeholder="Add Music" />
                           </div>
                           <div>
-                            <Input placeholder="Add location"  />
+                            <Input placeholder="Add location" />
                           </div>
                         </div>
                       )}
@@ -715,9 +746,9 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                       onChange={(e) => setScheduledTime(e.target.value)}
                       placeholder="Add date"
                       className="dark:bg-bgCopnents dark:text-black"
-                       iconClassName="text-red-600"
+                      iconClassName="text-red-600"
                     />
- 
+
                     <div className="flex justify-between mt-6">
                       <Button
                         variant="outline"
@@ -727,18 +758,14 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                         Save as Draft
                       </Button>
                       <Button
-                        className="font-bold text-slate-800 rounded-xl  p-2 border hover:bg-slate-200  dark:bg-bgbutton border-borderDarkmode dark:text-white"
+                        className="font-bold text-slate-800 rounded-xl  p-2 border hover:bg-slate-200  dark:bg-bgbutton border-borderDarkmode dark:text-white hidden sm:inline"
                         onClick={() => handleSubmit("scheduled")}
                       >
-                        <span className="hidden sm:inline">
-                          Schedule
-                        </span>
-                        <span>
-
-                          Post Now
+                        <span className="">
+                          Schedule Post Now
                         </span>
                       </Button>
-                    </div>         
+                    </div>
                   </>
                 )}
               </div>
@@ -767,33 +794,37 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
                   >
                     {selectedChannels.includes("Instagram") && (
                       <Insta
-                        previewImage={mediaUrls[0] || previewImages[0] || null} 
-                        postContent={postContent} 
+                        previewImage={mediaUrls[0] || previewImages[0] || null}
+                        postContent={postContent}
+                        data={data}
                       />
                     )}
                     {selectedChannels.includes("LinkedIn") && (
                       <Linkdin
-                        previewImage={mediaUrls[0] || previewImages[0] || null} 
-                        postContent={postContent} 
+                        previewImage={mediaUrls[0] || previewImages[0] || null}
+                        postContent={postContent}
+                        data={data}
                       />
                     )}
                     {selectedChannels.includes("XTwitter") && (
                       <Twitter
                         previewImage={mediaUrls[0] || previewImages[0] || null}
                         postContent={postContent}
-                        data={data} 
+                        data={data}
                       />
                     )}
                     {selectedChannels.includes("Pinterest") && (
                       <Printset
-                        previewImage={mediaUrls[0] || previewImages[0] || null} 
-                        postContent={postContent} 
+                        previewImage={mediaUrls[0] || previewImages[0] || null}
+                        postContent={postContent}
+                        data={data}
                       />
                     )}
                     {selectedChannels.includes("Facebook") && (
                       <Facebook
-                        previewImage={mediaUrls[0] || previewImages[0] || null} 
-                        postContent={postContent} 
+                        previewImage={mediaUrls[0] || previewImages[0] || null}
+                        postContent={postContent}
+                        data={data}
                       />
                     )}
                   </div>
@@ -808,7 +839,7 @@ function NewPost({ closePopup, initialChannels = [], userData ,preview }) {
           <div className="bg-white p-4 rounded-xl shadow-lg dark:bg-ScocilMCompnent">
             <Editer
               onSave={handleEditorSave}
-              onClose={() => setIsEditorOpen(false)} 
+              onClose={() => setIsEditorOpen(false)}
             />
           </div>
         </div>

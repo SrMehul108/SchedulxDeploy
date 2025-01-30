@@ -26,7 +26,7 @@ const InputCalendar = ({ value, onChange, ...props }) => {
   };
 
   const currentDateTime = getCurrentDateTime();
-  console.log(currentDateTime)
+  
   return (
     <input
       type="datetime-local"
@@ -123,7 +123,7 @@ const EditPost = ({ closePopup, editData, onAdd, onUpdate }) => {
         image: mediaUrls[0],
       });
       if (response.status === 200 && response.data.imagePath) {
-        console.log("Uploaded image:", response.data.imagePath);
+        
         setMediaUrls(response.data);
         return response.data;
       } else {
@@ -151,12 +151,12 @@ const EditPost = ({ closePopup, editData, onAdd, onUpdate }) => {
 
   const handleSave = async (status) => {
     try {
-      console.log("mediaUrls", mediaUrls.length);
+      
       let uploadedMediaUrl = null;
       if (mediaUrls.length !== 0) {
         // Upload images and get the URLs
         uploadedMediaUrl = await uploadImages();
-        console.log("uploadedMediaUrl", uploadedMediaUrl);
+        
 
         if (!uploadedMediaUrl && uploadedFiles.length > 0) {
           alert("Image upload failed.");
@@ -243,7 +243,7 @@ const EditPost = ({ closePopup, editData, onAdd, onUpdate }) => {
         status,
       };
 
-      console.log("Updated Payload:", updatedData);
+      
 
       // Update the post via API
       const response = await api.put(

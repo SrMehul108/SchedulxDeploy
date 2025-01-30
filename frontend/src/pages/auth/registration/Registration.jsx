@@ -16,6 +16,7 @@ const Registration = () => {
     role: "",
   });
   const [error, setError] = useState("");
+  const [formErrors, setFormErrors] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -34,23 +35,35 @@ const Registration = () => {
   };
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",];
   const handleNext = () => {
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.phoneNumber ||
-      !formData.password ||
-      !formData.confirmPassword
-    ) {
-      setError("Please fill in all fields.");
+    let errors = {};
+
+    if (!formData.name) errors.name = "Full Name is required.";
+    if (!formData.email) errors.email = "Email is required.";
+    if (!formData.phoneNumber) errors.phoneNumber = "Phone Number is required.";
+    if (!formData.password) errors.password = "Password is required.";
+    if (!formData.confirmPassword) errors.confirmPassword = "Confirm Password is required.";
+
+    if (formData.password && formData.password.length < 6) {
+      errors.password = "Password must be at least 6 characters long.";
+    }
+
+    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
+      errors.password = "Passwords do not match.";
+      errors.confirmPassword = "Passwords do not match.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setError("Please fill in all required fields correctly.");
+      setFormErrors(errors);
       return;
     }
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
+
     setError("");
-    setStep(2); // Go to Step 2
+    setFormErrors({});
+    setStep(2); // Proceed to step 2
   };
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -110,7 +123,7 @@ const Registration = () => {
   };
 
   return (
-    <div className="antialiased grid place-items-center min-h-screen px-4 sm:px-0">
+    <div className="antialiased grid place-items-center px-4 sm:px-0">
       <div className="w-full max-w-md sm:max-w-lg md:max-w-2xl mx-auto bg-white p-8 rounded-xl shadow shadow-slate-300 dark:text-white dark:bg-bgCopnents">
         {step === 1 && (
           <>
@@ -140,10 +153,12 @@ const Registration = () => {
                   type="text"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode  dark:border-borderDarkmode"
+                  className={`w-full py-3 border ${formErrors.name ? "border-red-500" : "border-slate-200"
+                    } rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode dark:border-borderDarkmode`}
                   placeholder="Enter your full name"
                   required
                 />
+                {formErrors.name && <p className="text-red-500 text-sm">{formErrors.name}</p>}
               </label>
               <label htmlFor="email">
                 <p className="font-medium text-slate-700 pb-2 dark:text-white">
@@ -155,10 +170,12 @@ const Registration = () => {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode  dark:border-borderDarkmode"
+                  className={`w-full py-3 border ${formErrors.email ? "border-red-500" : "border-slate-200"
+                    } rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode dark:border-borderDarkmode`}
                   placeholder="Enter your email"
                   required
                 />
+                {formErrors.email && <p className="text-red-500 text-sm">{formErrors.email}</p>}
               </label>
               <label htmlFor="phoneNumber">
                 <p className="font-medium text-slate-700 pb-2 dark:text-white">
@@ -170,10 +187,12 @@ const Registration = () => {
                   type="number"
                   value={formData.phoneNumber}
                   onChange={handleChange}
-                  className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode  dark:border-borderDarkmode"
+                  className={`w-full py-3 border ${formErrors.phoneNumber ? "border-red-500" : "border-slate-200"
+                    } rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode dark:border-borderDarkmode`}
                   placeholder="Enter your phone number"
                   required
                 />
+                {formErrors.phoneNumber && <p className="text-red-500 text-sm">{formErrors.phoneNumber}</p>}
               </label>
               <label htmlFor="password" className="block">
                 <p className="font-medium text-slate-700 pb-2 dark:text-white">
@@ -186,7 +205,8 @@ const Registration = () => {
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode  dark:border-borderDarkmode"
+                    className={`w-full py-3 border ${formErrors.password ? "border-red-500" : "border-slate-200"} 
+                    rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode dark:border-borderDarkmode`}
                     placeholder="Enter your password"
                     required
                   />
@@ -227,6 +247,7 @@ const Registration = () => {
                     )}
                   </button>
                 </div>
+                {formErrors.password && <p className="text-red-500 text-sm">{formErrors.password}</p>}
               </label>
               <label htmlFor="confirmPassword" className="block">
                 <p className="font-medium text-slate-700 pb-2 dark:text-white">
@@ -239,7 +260,8 @@ const Registration = () => {
                     type={showConfirmPassword ? "text" : "password"}
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode  dark:border-borderDarkmode"
+                    className={`w-full py-3 border ${formErrors.confirmPassword ? "border-red-500" : "border-slate-200"} 
+    rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow dark:text-white dark:bg-darkmode dark:border-borderDarkmode`}
                     placeholder="Confirm your password"
                     required
                   />
@@ -280,6 +302,7 @@ const Registration = () => {
                     )}
                   </button>
                 </div>
+                {formErrors.confirmPassword && <p className="text-red-500 text-sm">{formErrors.confirmPassword}</p>}
               </label>
 
               <div className="flex justify-end">

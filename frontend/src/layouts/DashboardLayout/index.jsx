@@ -92,7 +92,7 @@ const DashboardLayout = () => {
       localStorage.removeItem("token");
       return navigate("/");
     } catch (error) {
-      console.log("Logout", error);
+      
     }
   };
 

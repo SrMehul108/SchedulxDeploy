@@ -9,6 +9,7 @@ import Loading from "../../../components/loader/loader";
 import api from "../../../apis/api";
 import { jwtDecode } from "jwt-decode";
 import { Loader } from "lucide-react";
+import ChannelModal from "../../../components/User/Modal/ChannelModal/ChannelModal";
 
 const socialMedia = [
   {
@@ -81,6 +82,7 @@ const Publish = () => {
   const [error, setError] = useState(null);
   const [selectedPlatform, setSelectedPlatform] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [showChannelModal, setShowChannelModal] = useState(false);
 
   const facebookCalled = useRef(false);
   const linkedinCalled = useRef(false);
@@ -89,7 +91,7 @@ const Publish = () => {
   const handleOpenWithChannel = (channel) => {
     setSelectedChannels([channel]);
     setShowNewPostPopup(true);
-    console.log("channel namessss", channel);
+    
   };
 
   const handlePublish = () => {
@@ -150,7 +152,7 @@ const Publish = () => {
             }
           )
           .then((response) => {
-            console.log("User data saved successfully:", response.data);
+            
             const newUrl = `${window.location.origin}/publish`;
             window.history.replaceState(null, "", newUrl);
           })
@@ -188,7 +190,7 @@ const Publish = () => {
             }
           )
           .then((response) => {
-            console.log("User data saved successfully:", response.data);
+            
             const newUrl = `${window.location.origin}/publish`;
             window.history.replaceState(null, "", newUrl);
           })
@@ -225,7 +227,7 @@ const Publish = () => {
             }
           )
           .then((response) => {
-            console.log("User data saved successfully:", response.data);
+            
             const newUrl = `${window.location.origin}/publish`;
             window.history.replaceState(null, "", newUrl);
           })
@@ -256,7 +258,10 @@ const Publish = () => {
 
       const response = await api.get(`/api/v1/user/user-get/${userId}`);
       setUserData(response.data.data);
-      console.log("User Data : ", response.data.data);
+       // Check if user has any connected social media accounts
+       if (!response.data.data?.socialMedia?.length) {
+        setShowChannelModal(true);
+      }
     } catch (err) {
       console.error("Error fetching user data: ", err);
       setError(err.response?.data?.message || "Failed to fetch user data");
@@ -290,7 +295,7 @@ const Publish = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row ">
       <button
         onClick={toggleSidebar}
         className={clsx(
@@ -452,6 +457,7 @@ const Publish = () => {
             {isLoading && <Loading />}
             {!isLoading && (
               <>
+                 {showChannelModal && <ChannelModal onClose={() => setShowChannelModal(false)} />}
                 {location.pathname === "/publish" ? (
                   <Calendar userData={userData} />
                 ) : (

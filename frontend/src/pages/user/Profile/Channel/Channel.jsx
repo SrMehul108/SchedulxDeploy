@@ -21,7 +21,7 @@ export default function Channel() {
       const userId = localStorage.getItem("userId");
       const response = await api.get(`/api/v1/user/user-get/${userId}`);
       setUserData(response.data.data);
-      console.log("User Data: ", response.data.data);
+      
     } catch (err) {
       console.error("Error fetching user data: ", err);
       setError(err.response?.data?.message || "Failed to fetch user data");
@@ -52,8 +52,8 @@ export default function Channel() {
     platform: platform.platformName.toLowerCase(),
   }));
 
-  console.log("Channels", channels);
-  console.log("Modal", userData);
+  
+  
 
   return (
     <div className="max-w-4xl mx-auto p-4">

@@ -12,12 +12,12 @@ const Menu1 = ({ postId, onDelete, postStatus, onMoveToDraft }) => {
 
   const handleMoveToDrafts = async () => {
     try {
-      console.log(postId)
+      
       const response = await api.put(`/api/v1/post/post-update/${postId}`, {
         status: "draft",
       });
       if (response.data.success) {
-        console.log("Post moved to drafts successfully:", response.data.data);
+        
         if (onMoveToDraft) onMoveToDraft(postId); 
       } else {
         console.error("Failed to move post to drafts:", response.data.error);
@@ -35,7 +35,7 @@ const Menu1 = ({ postId, onDelete, postStatus, onMoveToDraft }) => {
     try {
       const response = await api.delete(`/api/v1/post/post-delete/${postId}`);
       if (response.data.success) {
-        console.log("Post deleted successfully:", response.data.data);
+        
         if (onDelete) onDelete(postId);
       } else {
         console.error("Failed to delete the post");

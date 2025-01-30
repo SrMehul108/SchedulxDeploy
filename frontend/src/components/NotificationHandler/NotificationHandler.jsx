@@ -9,14 +9,14 @@ const NotificationHandler = () => {
 
   useEffect(() => {
     if (!socket) {
-      console.log("Socket not ready yet.");
+      
       return; 
     }
 
-    console.log("Listening for notifications on socket:", socket);
+    
 
     const handleNotification = (data) => {
-      console.log("Received notification:", data);
+      
       if (data?.message) {
         toast.info(
           <div className="custom-toast">
@@ -40,7 +40,7 @@ const NotificationHandler = () => {
 
     return () => {
       socket.off("notification", handleNotification);
-      console.log("Stopped listening for notifications.");
+      
     };
   }, [socket]);
 

@@ -16,7 +16,7 @@ const FeedBack = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const feedback = e.target.elements[0].value;
-    console.log("Feedback submitted:", feedback);
+    
     setIsOpen(false); 
     e.target.reset(); 
   };

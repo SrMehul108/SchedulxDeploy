@@ -28,7 +28,7 @@ const CalenderModel = ({ isOpen, onClose, event, onDelete, onEdit }) => {
 
   if (!isOpen || !event) return null;
 
-  console.log("Particular event", event);
+  
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   // const scheduledTime = event.extendedProps.post.scheduledTime;
@@ -61,7 +61,7 @@ const CalenderModel = ({ isOpen, onClose, event, onDelete, onEdit }) => {
   const platformName = event.extendedProps.platformName.toLowerCase();
   const postId =
     event.extendedProps.post.platformSpecific[platformName]?.postId;
-  console.log(postId, platformName);
+  
 
   const platformUrls = {
     linkedin: `https://www.linkedin.com/feed/update/${postId}`,
@@ -92,7 +92,7 @@ const CalenderModel = ({ isOpen, onClose, event, onDelete, onEdit }) => {
       if (data.success) {
         onClose();
       } else {
-        console.log(data.error)
+        
       }
     } catch (error) {
       console.error("Error updating post status:", error);
@@ -109,7 +109,7 @@ const CalenderModel = ({ isOpen, onClose, event, onDelete, onEdit }) => {
       return;
     }
 
-    console.log("Rescheduling", event.extendedProps.post);
+    
 
     try {
       const payload = {
@@ -119,7 +119,7 @@ const CalenderModel = ({ isOpen, onClose, event, onDelete, onEdit }) => {
         status: "scheduled",
       };
 
-      console.log("Payload being sent:", payload);
+      
 
       const response = await api.put("/api/v1/post/post-schedule-time", payload);
 
@@ -346,7 +346,7 @@ const CalenderModel = ({ isOpen, onClose, event, onDelete, onEdit }) => {
                   onDelete={onDelete}
                   postStatus={event.extendedProps.post.status}
                   onMoveToDraft={(draftedPostId) => {
-                    console.log(`Post ${draftedPostId} moved to drafts`);
+                    
                   }}
                 />
               </div>

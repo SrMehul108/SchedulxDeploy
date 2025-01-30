@@ -32,6 +32,7 @@ const Analyze = () => {
       <div className="flex flex-col md:flex-row mt-20">
         {/* Sidebar */}
         <div className=" bg-gray-100 border-r border-gray-300">
+         
           <button
             onClick={toggleSidebar}
             className={`bg-black text-white p-2 rounded-md fixed z-50 lg:hidden 
